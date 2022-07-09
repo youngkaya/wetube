@@ -1,5 +1,4 @@
 import User from "../models/User";
-import Video from "../models/Video"
 import fetch from "cross-fetch";
 import bcrypt from "bcrypt";
 
@@ -19,14 +18,14 @@ export const postJoin = async (req, res) => {
     return res.status(400).render("join", {
       pageTitle: "Join",
       errorMessage: "This username is already taken.",
-    })
+    });
   }
   const emailExists = await User.exists({ email });
   if (emailExists) {
     return res.status(400).render("join", {
       pageTitle: "Join",
       errorMessage: "This email is already taken.",
-    })
+    });
   }
   try {
     await User.create({
@@ -41,19 +40,19 @@ export const postJoin = async (req, res) => {
       pageTitle: "Join",
     });
   }
-}
+};
 
 export const getLogin = (req, res) => res.render("login", { pageTitle: "Login" });
 
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
-  const pageTitle = "Login"
-  const user = await User.findOne({ email, socialOnly: false })
+  const pageTitle = "Login";
+  const user = await User.findOne({ email, socialOnly: false });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
       errorMessage: "An account with this email does not exists."
-    })
+    });
   }
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) {
@@ -65,7 +64,7 @@ export const postLogin = async (req, res) => {
   req.session.loggedIn = true;
   req.session.user = user;
   return res.redirect("/");
-}
+};
 
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
@@ -77,7 +76,7 @@ export const startGithubLogin = (req, res) => {
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
-}
+};
 
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
@@ -141,11 +140,11 @@ export const finishGithubLogin = async (req, res) => {
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
-}
+};
 
 export const getEdit = (req, res) => {
-  return res.render("edit-profile", { pageTitle: "Edit Profile" })
-}
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
 
 export const postEdit = async (req, res) => {
   const {
@@ -178,7 +177,7 @@ export const getChangePassword = (req, res) => {
     return res.redirect("/");
   }
   return res.render("users/change-password", { pageTitle: "Change Password" });
-}
+};
 
 export const postChangePassword = async (req, res) => {
   const {
@@ -208,11 +207,17 @@ export const postChangePassword = async (req, res) => {
 
 export const see = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id).populate("videos");
+  const user = await User.findById(id).populate({
+    path: "videos",
+    populate: {
+      path: "owner",
+      model: "User",
+    },
+  });
   if (!user) {
     return res.status(404).render("404", { pageTitle: "User not found" });
   }
   return res.render("users/profile", { pageTitle: `${user.username}'s Profile`, user });
-}
+};
 
 export const remove = (req, res) => res.send("Remove User");
