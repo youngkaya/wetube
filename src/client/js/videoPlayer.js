@@ -40,26 +40,14 @@ const handleVolumeChange = (event) => {
   const { target: { value } } = event;
   if (video.muted) {
     video.muted = false;
-    muteBtn.innerText = "Mute";
   }
   volumeValue = value;
   video.volume = value;
 };
 
-const handleTimelineChange = (event) => {
-  const { target: { value } } = event;
+const handleTimelineChange = async (event) => {
+  const { target: { value } } = await event;
   video.currentTime = value;
-};
-
-const handleFullscreen = () => {
-  const fullScreen = document.fullscreenElement;
-  if (fullScreen) {
-    document.exitFullscreen();
-    fullScreenIcon.classList = "fas fa-expand";
-  } else {
-    videoContainer.requestFullscreen();
-    fullScreenIcon.classList = "fas fa-compress";
-  }
 };
 
 const formatTime = (seconds) => new Date(seconds * 1000).toISOString().substring(14, 19);
@@ -72,6 +60,17 @@ const handleLoadedMetadata = () => {
 const handleTimeUpdate = () => {
   currentTime.innerText = formatTime(Math.floor(video.currentTime));
   timeline.value = Math.floor(video.currentTime);
+};
+
+const handleFullscreen = () => {
+  const fullScreen = document.fullscreenElement;
+  if (fullScreen) {
+    document.exitFullscreen();
+    fullScreenIcon.classList = "fas fa-expand";
+  } else {
+    videoContainer.requestFullscreen();
+    fullScreenIcon.classList = "fas fa-compress";
+  }
 };
 
 const hideControls = () => videoControls.classList.remove("showing");
@@ -93,12 +92,20 @@ const handleMouseLeave = () => {
   controlsTimeout = setTimeout(hideControls, 3000);
 };
 
+const handleKeydown = (event) => {
+  if (event.key === " ") {
+    handlePlayClick();
+  }
+};
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
+video.addEventListener("click", handlePlayClick);
 video.addEventListener("loadeddata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
-video.addEventListener("mousemove", handleMouseMove);
-video.addEventListener("mouseleave", handleMouseLeave);
+videoContainer.addEventListener("mousemove", handleMouseMove);
+videoContainer.addEventListener("mouseleave", handleMouseLeave);
+document.addEventListener("keydown", handleKeydown);
