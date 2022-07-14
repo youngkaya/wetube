@@ -8,7 +8,8 @@ form {
       $alpha: 0.7
     );
     border-radius: 10px;
-    border: 1px solid
+    border: 1px
+      solid
       rgba(
         $color: #fff,
         $alpha: 0.1
@@ -16,12 +17,18 @@ form {
   }
 }
 
-input:not(input[type="range"]) {
+input:not(input[type="range"]),
+input[type="submit"] {
   all: unset;
   padding: 15px 20px;
   border-radius: 5px;
   border: 1px solid
-    rgba(255, 255, 255, 0.2);
+    rgba(
+      255,
+      255,
+      255,
+      0.2
+    );
   background-color: black;
   margin-bottom: 5px;
   font-size: 16px;
@@ -41,12 +48,20 @@ input[type="submit"],
 .social__btn {
   border-radius: 5px;
   padding: 12px 20px;
-  background-color: white;
+  background-color: white !important;
   color: rgba(
     $color: $green,
     $alpha: 1
-  );
-  text-align: center;
+  ) !important;
+  text-align: center !important;
   cursor: pointer;
   display: block;
+  border: none;
+  &:focus {
+    outline: none;
+  }
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
