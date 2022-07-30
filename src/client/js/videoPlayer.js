@@ -45,8 +45,8 @@ const handleVolumeChange = (event) => {
   video.volume = value;
 };
 
-const handleTimelineChange = async (event) => {
-  const { target: { value } } = await event;
+const handleTimelineChange = (event) => {
+  const { target: { value } } = event;
   video.currentTime = value;
 };
 
@@ -104,7 +104,7 @@ const handleVideoPlay = async () => {
 };
 
 video.autoplay = true;
-document.addEventListener("keydown", handleKeydown);
+window.addEventListener("keydown", handleKeydown);
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);

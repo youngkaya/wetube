@@ -177,7 +177,7 @@ export const getChangePassword = (req, res) => {
     req.flash("error", "Can't change password.");
     return res.redirect("/");
   }
-  return res.render("users/change-password", { pageTitle: "Change Password" });
+  return res.render("change-password", { pageTitle: "Change Password" });
 };
 
 export const postChangePassword = async (req, res) => {
@@ -190,13 +190,13 @@ export const postChangePassword = async (req, res) => {
   const user = await User.findById(_id);
   const ok = await bcrypt.compare(oldPassword, user.password);
   if (!ok) {
-    return res.status(400).render("users/change-password", {
+    return res.status(400).render("change-password", {
       pageTitle: "Change Password",
       errorMessage: "The current password is incorrect",
     });
   }
   if (newPassword !== newPasswordConfirmation) {
-    return res.status(400).render("users/change-password", {
+    return res.status(400).render("change-password", {
       pageTitle: "Change Password",
       errorMessage: "The password does not match the confirmation",
     });
@@ -219,7 +219,7 @@ export const see = async (req, res) => {
   if (!user) {
     return res.status(404).render("404", { pageTitle: "User not found" });
   }
-  return res.render("users/profile", { pageTitle: `${user.username}'s Profile`, user });
+  return res.render("profile", { pageTitle: `${user.username}'s Profile`, user });
 };
 
 export const remove = (req, res) => res.send("Remove User");

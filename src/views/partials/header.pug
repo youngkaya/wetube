@@ -1,6 +1,6 @@
 header
   a(href="/").header__logo
-    i.fab.fa-youtube
+    img(src="/img/icon.png")
   nav
     ul
       li
@@ -15,13 +15,10 @@ header
           a(href="/users/logout") Logout
         li
           a(href=`/users/${loggedInUser._id}`)
-            if loggedInUser.avatarUrl === ""
-              span 😀
+            if loggedInUser.socialOnly
+              img.header__avatar(crossorigin="anonymous", src=loggedInUser.avatarUrl)
             else
-              if loggedInUser.socialOnly
-                img.header__avatar(src=loggedInUser.avatarUrl)
-              else
-                img.header__avatar(src="/" + loggedInUser.avatarUrl)
+              img.header__avatar(src="/" + loggedInUser.avatarUrl)
       else
         li
           a(href="/join").header__btn Join
