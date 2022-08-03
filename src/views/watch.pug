@@ -37,7 +37,8 @@ block content
       each comment in video.comments.reverse()
         li.video__comment(data-id=comment.id)
           span #{comment.text}
-          span  ❌
+          if String(video.owner._id) === String(loggedInUser._id)
+            span#delBtn  ❌
 
 block scripts
   script(src="/static/js/videoPlayer.js")
